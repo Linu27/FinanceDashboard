@@ -22,6 +22,7 @@
     <EntitySetMapping Name="CardTables">
       <EntityTypeMapping TypeName="FinanceModel.CardTable">
         <MappingFragment StoreEntitySet="CardTable">
+          <ScalarProperty Name="TotalCredit" ColumnName="TotalCredit" />
           <ScalarProperty Name="CardNumber" ColumnName="CardNumber" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="ValidTill" ColumnName="ValidTill" />

@@ -155,8 +155,9 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>FinanceModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Productspurchased\Productpurchase.cs" />
-    <Compile Include="Productspurchased\RecentTransaction.cs" />
+    <Compile Include="ViewModel\Creditdetails.cs" />
+    <Compile Include="ViewModel\Productpurchase.cs" />
+    <Compile Include="ViewModel\RecentTransaction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

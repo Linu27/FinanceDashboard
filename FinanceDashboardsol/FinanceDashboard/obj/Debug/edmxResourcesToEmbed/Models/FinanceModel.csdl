@@ -29,6 +29,7 @@
     <Property Name="CardType" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
     <NavigationProperty Name="Admin" Relationship="Self.FK__CardTable__Name__49C3F6B7" FromRole="CardTable" ToRole="Admin" />
     <NavigationProperty Name="Orders" Relationship="Self.FK__Orders__CardNumb__4E88ABD4" FromRole="CardTable" ToRole="Orders" />
+    <Property Name="TotalCredit" Type="Int32" />
   </EntityType>
   <EntityType Name="CardTypeTable">
     <Key>
@@ -66,7 +67,7 @@
     <Property Name="OrderID" Type="Int32" Nullable="false" />
     <Property Name="ProductID" Type="Int32" Nullable="false" />
     <Property Name="Quantity" Type="Int32" Nullable="false" />
-    <Property Name="TotalAmount" Type="Int32" Nullable="false" />
+    <Property Name="TotalAmount" Type="Int32" />
     <Property Name="ProcessingFee" Type="Double" Nullable="false" />
     <Property Name="EMI_Tenure_in_Months" Type="Int32" Nullable="false" />
     <NavigationProperty Name="Order" Relationship="Self.FK__OrderDeta__Order__4CA06362" FromRole="OrderDetails" ToRole="Orders" />

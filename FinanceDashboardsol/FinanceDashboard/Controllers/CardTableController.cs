@@ -9,7 +9,7 @@ using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Description;
 using FinanceDashboard.Models;
-using FinanceDashboard.Productspurchased;
+using FinanceDashboard.ViewModel;
 
 namespace FinanceDashboard.Controllers
 {
@@ -23,9 +23,10 @@ namespace FinanceDashboard.Controllers
             return db.CardTables;
         }
 
+        #region carddetails
         // GET: api/CardTable/Name
         [ResponseType(typeof(CardTable))]
-        //[Route("CardTable/Name")]
+        //[Route("CardTable/{id}")]
         public IHttpActionResult GetCardTable(long id)
         {
             CardTable cardTable = db.CardTables.Find(id);
@@ -36,6 +37,37 @@ namespace FinanceDashboard.Controllers
 
             return Ok(cardTable);
         }
+        #endregion
+
+        #region Creditdetails
+        //[ResponseType(typeof(Creditdetails))]
+        [Route("api/CardTable/GetCredit")]
+        public IEnumerable<Creditdetails> GetCreditdetails()
+        {
+            List<Creditdetails> creditlist = new List<Creditdetails>();
+            var cl = (from c in db.CardTables
+                      join o in db.Orders on
+                      c.CardNumber equals o.CardNumber
+                      join od in db.OrderDetails on
+                      o.OrderID equals od.OrderID
+                      select new { c.CardNumber, c.TotalCredit, creditused = (od.TotalAmount + od.ProcessingFee), Remainingcredit = c.TotalCredit - (od.TotalAmount + od.ProcessingFee) }
+                    ).ToList();
+            foreach (var item in cl)
+            {
+                Creditdetails objcl = new Creditdetails();
+                objcl.CardNumber = item.CardNumber;
+                objcl.TotalCredit = item.TotalCredit;
+                objcl.creditused = item.creditused;
+                objcl.Remainingcredit = item.Remainingcredit;
+                creditlist.Add(objcl);
+
+            }
+            return creditlist;
+
+        }
+        #endregion
+
+        #region products_purchased
 
         [ResponseType(typeof(Productpurchase))]
         [Route("api/CardTable/GetProducts")]
@@ -46,8 +78,8 @@ namespace FinanceDashboard.Controllers
                       join od in db.OrderDetails on
                       p.ProductID equals od.ProductID
                       join o in db.Orders on od.OrderID
-                      equals o.OrderID
-                      select new { od.OrderID,p.ProductName, od.TotalAmount, o.BillAmountperMonth, Balance = od.TotalAmount - o.BillAmountperMonth }
+                      equals o.OrderID join c in db.CardTables on o.CardNumber equals c.CardNumber
+                      select new { od.OrderID,p.ProductName, p.CostPerUnit, AmountPaid=od.TotalAmount+od.ProcessingFee, Balance = c.TotalCredit-(od.TotalAmount + od.ProcessingFee)}
 
                     ).ToList();
             foreach (var item in pl)
@@ -55,8 +87,8 @@ namespace FinanceDashboard.Controllers
                 Productpurchase objpl = new Productpurchase();
                 objpl.OrderID = item.OrderID;
                 objpl.ProductName=item.ProductName;
-                objpl.TotalAmount = item.TotalAmount;
-                objpl.BillAmountperMonth = item.BillAmountperMonth;
+                objpl.CostPerUnit = item.CostPerUnit;
+                objpl.AmountPaid = item.AmountPaid;
                 objpl.Balance = item.Balance;
 
                 productslist.Add(objpl);
@@ -64,6 +96,12 @@ namespace FinanceDashboard.Controllers
             }
             return productslist;
         }
+
+        #endregion
+
+
+        #region recent_transactions
+        [ResponseType(typeof(RecentTransaction))]
         [Route("api/CardTable/GetTransactions")]
         public IEnumerable<RecentTransaction> GetRecenttransactions()
         {
@@ -73,7 +111,7 @@ namespace FinanceDashboard.Controllers
                       p.ProductID equals od.ProductID
                       join o in db.Orders on od.OrderID
                       equals o.OrderID
-                      select new { od.OrderID, p.ProductName, o.OrderDate,od.TotalAmount}
+                      select new { od.OrderID, p.ProductName, o.OrderDate, AmountPaid = od.TotalAmount + od.ProcessingFee }
 
                     ).ToList();
             foreach (var item in tl)
@@ -82,13 +120,14 @@ namespace FinanceDashboard.Controllers
                 objtl.OrderID = item.OrderID;
                 objtl.ProductName = item.ProductName;
                 objtl.OrderDate = item.OrderDate;
-                objtl.TotalAmount = item.TotalAmount;
+                objtl.AmountPaid = item.AmountPaid;
 
                 transactionlist.Add(objtl);
 
             }
             return transactionlist;
         }
+        #endregion
 
 
     }

@@ -12,11 +12,12 @@ namespace FinanceDashboard.Models
     using System;
     using System.Collections.Generic;
     using System.Runtime.Serialization;
+
+
     [DataContract]
     public partial class CardTable
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        
         public CardTable()
         {
             this.Orders = new HashSet<Order>();
@@ -29,6 +30,8 @@ namespace FinanceDashboard.Models
         public string ValidTill { get; set; }
         [DataMember]
         public string CardType { get; set; }
+        [DataMember]
+        public int TotalCredit { get; set; }
     
         public virtual Admin Admin { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
